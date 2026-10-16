@@ -276,7 +276,7 @@ Drop an 800×800 `assets/avatars/<id>.png` to give it a face. Ready prompts are 
 <a id="-brand"></a>
 <p align="center"><img src="assets/readme/h_brand.png" width="100%" alt="Brand kit"></p>
 
-Everything is in [`assets/`](assets/): avatar, X banner (1500×500), team poster, 14 role avatars, the demo GIF and the launch video ([`assets/grokky_hq.mp4`](assets/grokky_hq.mp4)). Prompts to generate more art are in [docs/PROMPTS.md](docs/PROMPTS.md), and launch posts are in [docs/LAUNCH_POSTS.md](docs/LAUNCH_POSTS.md).
+Everything is in [`assets/`](assets/): avatar, office avatar ([`assets/office_avatar.png`](assets/office_avatar.png)), X banner (1500×500), team poster, 14 role avatars, the demo GIF and the launch video ([`assets/grokky_hq.mp4`](assets/grokky_hq.mp4)). Prompts to generate more art are in [docs/PROMPTS.md](docs/PROMPTS.md), and launch posts are in [docs/LAUNCH_POSTS.md](docs/LAUNCH_POSTS.md).
 
 <p align="center">
 <img src="assets/avatars/x-research.png" width="88"><img src="assets/avatars/engineering.png" width="88"><img src="assets/avatars/trenches.png" width="88"><img src="assets/avatars/wall-st.png" width="88"><img src="assets/avatars/content.png" width="88"><img src="assets/avatars/whale-watch.png" width="88"><img src="assets/avatars/seo.png" width="88"><br>
