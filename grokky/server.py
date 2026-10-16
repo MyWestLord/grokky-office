@@ -21,6 +21,7 @@ app.mount("/assets", StaticFiles(directory=ROOT / "assets"), name="assets")
 class Mission(BaseModel):
     goal: str
     only: list[str] | None = None
+    squad: str | None = None
 
 
 @app.get("/")
@@ -33,6 +34,7 @@ def roles():
     return {
         "demo": llm.demo_mode(),
         "model": llm.model_name("boss"),
+        "squads": office.squads,
         "roles": [{"id": r.id, "name": r.name, "color": r.color, "tools": r.tools, "avatar": r.avatar,
                    "job": r.prompt.strip().splitlines()[0]} for r in office.roles.values()],
     }
@@ -42,7 +44,9 @@ def roles():
 async def mission(m: Mission):
     if office.running:
         raise HTTPException(409, "A mission is already running")
-    asyncio.create_task(office.run(m.goal, m.only))
+    if m.squad and m.squad not in office.squads:
+        raise HTTPException(400, f"Unknown squad {m.squad}")
+    asyncio.create_task(office.run(m.goal, m.only, m.squad or None))
     return {"ok": True}
 
 

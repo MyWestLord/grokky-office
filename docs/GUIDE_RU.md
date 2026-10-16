@@ -4,7 +4,9 @@
 
 **Что это.** Свой офис из ИИ-агентов на Гроке. Есть **Босс** и 13 сотрудников-Грокботов. Ты даёшь Боссу одну цель, он раздаёт задачи отделам, все работают параллельно, Босс проверяет каждый отчёт и в конце отдаёт тебе **Daily Brief**. Всё это видно вживую на визуальном дашборде.
 
+<p align="center"><img src="../assets/readme/features.png" width="100%"></p>
 <p align="center"><img src="../assets/dashboard.png" width="100%"></p>
+<p align="center"><img src="../assets/readme/how_it_works.png" width="100%"></p>
 
 ---
 
@@ -88,6 +90,31 @@ python -m grokky roles
 
 ---
 
+## Отряды (squads)
+
+<p align="center"><img src="../assets/readme/squads.png" width="100%"></p>
+
+Не обязательно гонять весь офис. Отряд — это готовая команда под задачу, и так быстрее и дешевле. В дашборде выбери отряд в выпадающем списке рядом с кнопкой START, в терминале добавь `--squad`:
+```bash
+python -m grokky run "Запуск токена $GROKKY" --squad launch    # X Research, контент, креатив, PR, комьюнити, PM, QA
+python -m grokky run "Брифинг по рынку" --squad trader          # X, окопы, Wall St, киты, аналитик, QA (только бумага)
+python -m grokky run "Вырасти аккаунт в нише ИИ" --squad growth  # X, контент, SEO, комьюнити, аналитик
+python -m grokky run "Сделай бота для алертов" --squad builder  # инженер, PM, аналитик, QA
+python -m grokky run "Утренний брифинг" --squad intel           # X, киты, аналитик, QA
+```
+Свой отряд добавляется одной строкой в `office.yaml` в блок `squads:`.
+
+## Daily Brief в Telegram
+
+1. В Telegram напиши [@BotFather](https://t.me/BotFather), команда `/newbot`, и скопируй токен.
+2. Напиши своему боту любое сообщение, потом узнай свой chat id через [@userinfobot](https://t.me/userinfobot).
+3. Впиши оба значения в `.env`:
+```env
+TELEGRAM_BOT_TOKEN=123456:ABC...
+TELEGRAM_CHAT_ID=123456789
+```
+После каждой миссии Босс будет присылать Daily Brief прямо в чат. Вместе с `loop --every 60` получается персональный аналитический отдел в телефоне.
+
 ## Как добавить свою должность
 
 Открой `office.yaml` и добавь блок в `roles:`:
@@ -107,9 +134,20 @@ python -m grokky roles
 
 ---
 
+## Роадмап
+
+<p align="center"><img src="../assets/readme/roadmap.png" width="100%"></p>
+
+- **Phase 0 · BOOT ✅** — Босс + 13 Грокботов, дашборд, проверка отчётов, демо-режим, CLI.
+- **Phase 1 · SQUADS & DELIVERY ✅** — отряды, Daily Brief в Telegram, режим 24/7, аватарки.
+- **Phase 2 · OFFICE MEMORY (следующая)** — агенты помнят прошлые отчёты, графики KPI, недельный дайджест, счётчик расходов.
+- **Phase 3 · HANDS** — постинг в X в один клик из очереди одобрения, PR в GitHub от инженера, экспорт в Notion/Sheets, боты для Discord и Slack.
+- **Phase 4 · OFFICE WORLD** — живой анимированный 3D-офис, где агенты ходят по комнатам, как в ролике, голосовой брифинг Босса, мобильное приложение.
+- **Phase 5 · MARKETPLACE** — маркет Грокботов от комьюнити, обмен офисами, XP, уровни и «Сотрудник месяца», мульти-офисы для агентств.
+
 ## Как держать офис включённым 24/7
 
-- **Цикл:** `python -m grokky loop "Утренний брифинг" --every 60`
+- **Цикл:** `python -m grokky loop "Утренний брифинг" --squad intel --every 60`
 - **Cron (Linux/macOS):** `0 8 * * * cd ~/grokky-office && .venv/bin/python -m grokky run "Daily brief" >> office.log 2>&1`
 - **VPS:** `python -m grokky serve --host 0.0.0.0`, после чего дашборд открывается с телефона. Обязательно закрой его паролем или VPN: встроенного логина нет.
 

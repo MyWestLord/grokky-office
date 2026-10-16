@@ -42,6 +42,7 @@ class Office:
         cfg = yaml.safe_load(Path(config).read_text(encoding="utf-8"))
         self.cfg = {k: _expand(v) for k, v in cfg.get("office", {}).items()}
         self.rules = cfg.get("rules", "")
+        self.squads = cfg.get("squads", {}) or {}
         self.roles = {r["id"]: Role(**{k: r[k] for k in ("id", "name", "prompt", "tools", "outfit", "color") if k in r}) for r in cfg["roles"]}
         self.boss = self.roles["boss"]
         self.workers = {k: v for k, v in self.roles.items() if k != "boss"}
@@ -111,7 +112,11 @@ class Office:
             "decisions to make today, next actions with owner role, risks. Markdown."), kind="boss", tools=[])
 
     # ------------------------------------------------------------ full run
-    async def run(self, goal: str, only: list[str] | None = None) -> Path:
+    async def run(self, goal: str, only: list[str] | None = None, squad: str | None = None) -> Path:
+        if squad:
+            if squad not in self.squads:
+                raise ValueError(f"Unknown squad '{squad}'. Available: {', '.join(self.squads)}")
+            only = self.squads[squad]
         if self.running:
             raise RuntimeError("A mission is already running")
         self.running = True
@@ -123,6 +128,9 @@ class Office:
             brief = await self.brief(goal, results)
             path = save_report(goal, results, brief)
             await bus.emit("boss", "done", brief, report=str(path.name))
+            sent = await asyncio.to_thread(send_telegram, f"GROKKY HQ — Daily Brief\nGoal: {goal}\n\n{brief}")
+            if sent:
+                await bus.emit("boss", "delivered", "Daily Brief sent to Telegram ✓")
             return path
         except Exception as e:  # surface errors on the dashboard
             await bus.emit("boss", "error", f"{type(e).__name__}: {e}")
@@ -148,3 +156,22 @@ def save_report(goal: str, results: list[dict], brief: str) -> Path:
     parts += [f"## {r['name']}\n_Task: {r['task']}_\n\n{r['output']}\n" for r in results]
     p.write_text("\n".join(parts), encoding="utf-8")
     return p
+
+
+def send_telegram(text: str) -> bool:
+    """Deliver the Daily Brief to Telegram if TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID are set."""
+    token, chat = os.getenv("TELEGRAM_BOT_TOKEN"), os.getenv("TELEGRAM_CHAT_ID")
+    if not (token and chat):
+        return False
+    import urllib.parse
+    import urllib.request
+
+    ok = True
+    for i in range(0, min(len(text), 12000), 3900):  # Telegram limit is 4096 chars per message
+        data = urllib.parse.urlencode({"chat_id": chat, "text": text[i:i + 3900], "disable_web_page_preview": "true"}).encode()
+        try:
+            urllib.request.urlopen(f"https://api.telegram.org/bot{token}/sendMessage", data=data, timeout=20)
+        except Exception as e:  # never break a mission because of delivery
+            print("telegram delivery failed:", e)
+            ok = False
+    return ok

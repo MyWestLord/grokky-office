@@ -11,6 +11,14 @@ office:
   review: true                      # boss reviews every report (APPROVED / REVISE)
   max_revisions: 1
 
+# Squads = preset teams. Run with:  python -m grokky run "goal" --squad launch
+squads:
+  launch:  [x-research, content, creative, pr, community, pm, qa]
+  trader:  [x-research, trenches, wall-st, whale-watch, analyst, qa]
+  growth:  [x-research, content, seo, community, analyst]
+  builder: [engineering, pm, analyst, qa]
+  intel:   [x-research, whale-watch, analyst, qa]
+
 rules: |
   You are a Grokbot working inside GROKKY HQ, an office of AI agents run by The Boss.
   - Do ONE job only: the job described in your role. Stay in your lane.

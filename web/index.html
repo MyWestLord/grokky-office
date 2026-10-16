@@ -23,6 +23,7 @@ h1{margin:0;font:900 30px Inter;letter-spacing:.5px;text-shadow:0 0 24px #9a5cff
 .sub{color:var(--mut);font-size:13px}
 .badge{font:800 11px 'JetBrains Mono';padding:5px 10px;border-radius:99px;border:1px solid;margin-left:6px}
 .mission{flex:1;display:flex;gap:10px;max-width:760px;margin-left:auto}
+.mission select{background:#0b1120;border:1px solid #23304d;color:var(--txt);border-radius:14px;padding:0 12px;font:600 13px Inter;outline:none}
 .mission input{flex:1;background:#0b1120;border:1px solid #23304d;color:var(--txt);border-radius:14px;padding:13px 16px;font:500 15px Inter;outline:none}
 .mission input:focus{border-color:var(--vio);box-shadow:0 0 0 3px #9a5cff33}
 button{background:linear-gradient(135deg,#2fe38a,#19d3c5);border:0;color:#04120b;font:900 14px Inter;padding:0 20px;border-radius:14px;cursor:pointer}
@@ -78,6 +79,7 @@ dialog::backdrop{background:#000b;backdrop-filter:blur(4px)}
   <div><h1>GROKKY HQ</h1><div class="sub">1 boss · <span id="cnt">13</span> Grokbots · <span id="mode"></span></div></div>
   <form class="mission" onsubmit="go(event)">
     <input id="goal" placeholder="Give the Boss a mission… e.g. Research AI-agent narrative on X and plan a launch for my token" autocomplete="off">
+    <select id="squad" title="Who works on this mission"><option value="">🏢 Whole office</option></select>
     <button id="btn">START ▶</button>
   </form>
 </header>
@@ -102,6 +104,7 @@ PRE.forEach(p=>{const c=document.createElement('span');c.className='chip';c.text
 function hexA(h,a){return h+Math.round(a*255).toString(16).padStart(2,'0')}
 async function init(){
   const r=await (await fetch('/api/roles')).json();ROLES=r.roles;
+  Object.entries(r.squads||{}).forEach(([k,v])=>{const o=document.createElement('option');o.value=k;o.textContent='⚡ '+k[0].toUpperCase()+k.slice(1)+' squad ('+v.length+')';$('#squad').appendChild(o)});
   $('#mode').innerHTML=r.demo?'<span class="badge" style="color:#ffb020;border-color:#ffb020">DEMO MODE · add XAI_API_KEY</span>':`<span class="badge" style="color:#2fe38a;border-color:#2fe38a">LIVE · ${r.model}</span>`;
   const g=$('#grid');ROLES.filter(x=>x.id!=='boss').forEach(x=>{R[x.id]=x;
     const d=document.createElement('div');d.className='room idle';d.id='r-'+x.id;d.style.setProperty('--c',x.color);d.style.setProperty('--c2',hexA(x.color,.14));
@@ -116,7 +119,7 @@ function onEv(e){
   const r=R[e.role]||R.boss;
   if(e.kind==='mission'){Object.keys(R).forEach(k=>k!=='boss'&&setSt(k,'idle'));$('#brief').style.display='none';$('#btn').disabled=true;for(const k in OUT)delete OUT[k];}
   if(e.role==='boss'){
-    const map={mission:'New mission: '+e.text,planning:'Planning the day…',reviewing:e.text,writing:'Writing the Daily Brief…',done:'Mission complete ✓',error:'Error: '+e.text};
+    const map={delivered:e.text,mission:'New mission: '+e.text,planning:'Planning the day…',reviewing:e.text,writing:'Writing the Daily Brief…',done:'Mission complete ✓',error:'Error: '+e.text};
     if(map[e.kind])$('#bossAct').textContent=map[e.kind];
     if(e.kind==='reviewing'&&e.target)setSt(e.target,'submitted');
     if(e.kind==='done'){$('#brief').style.display='block';$('#briefMd').innerHTML=marked.parse(e.text);$('#btn').disabled=false;loadReports();}
@@ -138,7 +141,7 @@ function openRole(id){const r=R[id];$('#dImg').src=r.avatar;$('#dName').textCont
 async function loadReports(){const l=await (await fetch('/api/reports')).json();$('#reports').innerHTML=l.length?'':'<span class="sub">No reports yet.</span>';
   l.slice(0,12).forEach(n=>{const a=document.createElement('a');a.textContent='📄 '+n;a.onclick=async()=>{const t=await (await fetch('/api/reports/'+n)).text();$('#dImg').src='/assets/avatar.png';$('#dName').textContent=n;$('#dName').style.color='#fff';$('#dSub').textContent='REPORT';$('#dBody').innerHTML=marked.parse(t);dlg.showModal();};$('#reports').appendChild(a);});}
 async function go(ev){ev.preventDefault();const goal=$('#goal').value.trim();if(!goal)return;
-  const r=await fetch('/api/mission',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goal})});if(!r.ok)alert(await r.text());}
+  const r=await fetch('/api/mission',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goal,squad:$('#squad').value||null})});if(!r.ok)alert(await r.text());}
 init();
 </script>
 </body>

@@ -22,11 +22,13 @@ def main():
     r = sub.add_parser("run", help="run one mission in the terminal")
     r.add_argument("goal")
     r.add_argument("--only", nargs="*", help="only these role ids")
+    r.add_argument("--squad", help="preset team from office.yaml: launch, trader, growth, builder, intel")
     lp = sub.add_parser("loop", help="run the same mission every N minutes")
     lp.add_argument("goal")
     lp.add_argument("--every", type=int, default=60, help="minutes")
     lp.add_argument("--only", nargs="*")
-    sub.add_parser("roles", help="list the team")
+    lp.add_argument("--squad")
+    sub.add_parser("roles", help="list the team and squads")
     a = ap.parse_args()
 
     if a.cmd == "serve":
@@ -42,15 +44,18 @@ def main():
     if a.cmd == "roles":
         for r in office.roles.values():
             print(f"  {r.id:<12} {r.name:<18} tools={','.join(r.tools) or '-'}")
+        print("\n  squads:")
+        for k, v in office.squads.items():
+            print(f"  {k:<10} {', '.join(v)}")
         return
     bus.echo = True
     if a.cmd == "run":
-        p = asyncio.run(office.run(a.goal, a.only))
+        p = asyncio.run(office.run(a.goal, a.only, a.squad))
         print(f"\n  ✓ Report saved: {p}\n")
     elif a.cmd == "loop":
         async def forever():
             while True:
-                p = await office.run(a.goal, a.only)
+                p = await office.run(a.goal, a.only, a.squad)
                 print(f"\n  ✓ Report saved: {p}  — next run in {a.every} min\n")
                 await asyncio.sleep(a.every * 60)
         asyncio.run(forever())
