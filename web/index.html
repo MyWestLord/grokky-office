@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GROKKY HQ</title>
+<link rel="icon" href="/assets/avatar.png">
+<script src="/assets/vendor/marked.min.js"></script>
+<style>
+@font-face{font-family:Inter;font-weight:400;src:url(/assets/fonts/inter-latin-400-normal.woff2)}
+@font-face{font-family:Inter;font-weight:600;src:url(/assets/fonts/inter-latin-600-normal.woff2)}
+@font-face{font-family:Inter;font-weight:800;src:url(/assets/fonts/inter-latin-800-normal.woff2)}
+@font-face{font-family:Inter;font-weight:900;src:url(/assets/fonts/inter-latin-900-normal.woff2)}
+@font-face{font-family:'JetBrains Mono';font-weight:500;src:url(/assets/fonts/jetbrains-mono-latin-400-normal.woff2)}
+@font-face{font-family:'JetBrains Mono';font-weight:800;src:url(/assets/fonts/jetbrains-mono-latin-700-normal.woff2)}
+:root{--bg:#05070d;--panel:#0c1222;--line:rgba(255,255,255,.08);--txt:#e6edf7;--mut:#7d8fb0;--boss:#2fe38a;--vio:#9a5cff}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 600px at 70% -10%,#1a1440 0,transparent 60%),radial-gradient(900px 500px at 0% 10%,#0c2a3a 0,transparent 55%),var(--bg);color:var(--txt);font:15px/1.45 Inter,system-ui,sans-serif;min-height:100vh}
+.mono{font-family:'JetBrains Mono',monospace}
+header{display:flex;gap:18px;align-items:center;padding:18px 26px;border-bottom:1px solid var(--line);background:rgba(5,7,13,.7);backdrop-filter:blur(10px);position:sticky;top:0;z-index:5}
+header img{width:54px;height:54px;border-radius:50%;box-shadow:0 0 24px #2fe38a66}
+h1{margin:0;font:900 30px Inter;letter-spacing:.5px;text-shadow:0 0 24px #9a5cffaa}
+.sub{color:var(--mut);font-size:13px}
+.badge{font:800 11px 'JetBrains Mono';padding:5px 10px;border-radius:99px;border:1px solid;margin-left:6px}
+.mission{flex:1;display:flex;gap:10px;max-width:760px;margin-left:auto}
+.mission input{flex:1;background:#0b1120;border:1px solid #23304d;color:var(--txt);border-radius:14px;padding:13px 16px;font:500 15px Inter;outline:none}
+.mission input:focus{border-color:var(--vio);box-shadow:0 0 0 3px #9a5cff33}
+button{background:linear-gradient(135deg,#2fe38a,#19d3c5);border:0;color:#04120b;font:900 14px Inter;padding:0 20px;border-radius:14px;cursor:pointer}
+button:disabled{opacity:.45;cursor:wait}
+.presets{display:flex;gap:8px;flex-wrap:wrap;padding:12px 26px 0}
+.chip{font:600 12px Inter;color:var(--mut);border:1px solid var(--line);padding:6px 11px;border-radius:99px;cursor:pointer;background:#0a0f1c}
+.chip:hover{color:#fff;border-color:#3a4a70}
+main{display:grid;grid-template-columns:1fr 380px;gap:20px;padding:18px 26px 40px}
+@media(max-width:1100px){main{grid-template-columns:1fr}}
+.boss{display:flex;gap:18px;align-items:center;background:linear-gradient(90deg,#0f2a1f,#0c1222 60%);border:1px solid #2fe38a44;border-radius:22px;padding:16px 20px;margin-bottom:18px}
+.boss img{width:92px;height:92px;border-radius:20px}
+.boss .act{font:800 20px Inter}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:14px}
+.room{position:relative;background:linear-gradient(180deg,var(--c2),#0b1020 70%);border:1px solid var(--line);border-radius:20px;padding:14px;cursor:pointer;transition:transform .15s,border-color .2s,box-shadow .2s;overflow:hidden}
+.room:hover{transform:translateY(-2px)}
+.room img{width:100%;aspect-ratio:1;border-radius:14px;display:block;filter:saturate(.6) brightness(.75);transition:filter .3s}
+.room .nm{font:900 15px Inter;margin-top:10px}
+.room .tools{font:500 10px 'JetBrains Mono';color:var(--mut);margin-top:3px}
+.room .task{font-size:12px;color:#aab7d1;margin-top:8px;min-height:34px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.st{position:absolute;top:22px;left:22px;font:800 10px 'JetBrains Mono';padding:5px 9px;border-radius:99px;background:#000a;border:1px solid #fff2;letter-spacing:.5px}
+.room.assigned{border-color:#3b9cff66}
+.room.working{border-color:var(--c);box-shadow:0 0 0 1px var(--c),0 0 34px -6px var(--c)}
+.room.working img,.room.submitted img,.room.revising img,.room.approved img{filter:none}
+.room.working .st{color:var(--c);border-color:var(--c);animation:pulse 1s infinite}
+.room.submitted .st{color:#c4b5ff;border-color:#9a5cff}
+.room.revising .st{color:#ffb020;border-color:#ffb020}
+.room.approved{border-color:#2fe38a88}
+.room.approved .st{color:#04120b;background:#2fe38a;border-color:#2fe38a}
+.room.working::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,transparent,var(--c),transparent);animation:scan 1.2s linear infinite}
+@keyframes pulse{50%{opacity:.4}}
+@keyframes scan{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+aside .panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:14px 16px;margin-bottom:16px}
+aside h3{margin:0 0 10px;font:800 12px 'JetBrains Mono';color:var(--mut);letter-spacing:1px}
+#feed{height:440px;overflow:auto;font-size:12.5px}
+.ev{display:flex;gap:9px;padding:7px 0;border-bottom:1px dashed #ffffff0f}
+.ev img{width:26px;height:26px;border-radius:8px;flex:none}
+.ev b{font-weight:800}
+.ev .k{font:800 10px 'JetBrains Mono';opacity:.8}
+#reports a{display:block;color:#9fd3ff;font:500 12px 'JetBrains Mono';padding:4px 0;text-decoration:none;cursor:pointer}
+#brief{display:none;margin-top:18px;background:var(--panel);border:1px solid #2fe38a55;border-radius:22px;padding:22px 26px}
+.md{font-size:14px}.md table{border-collapse:collapse;width:100%;margin:8px 0}.md td,.md th{border:1px solid #ffffff1a;padding:6px 8px;text-align:left}.md code{background:#0004;padding:2px 5px;border-radius:5px}.md pre{background:#050810;padding:12px;border-radius:12px;overflow:auto}.md a{color:#7cc4ff}
+dialog{width:min(900px,92vw);max-height:86vh;background:#0b1020;color:var(--txt);border:1px solid #2a3654;border-radius:22px;padding:0}
+dialog::backdrop{background:#000b;backdrop-filter:blur(4px)}
+.dh{display:flex;gap:14px;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#0b1020}
+.dh img{width:56px;height:56px;border-radius:14px}
+.db{padding:6px 22px 22px;overflow:auto}
+.x{margin-left:auto;background:#ffffff14;color:#fff;padding:8px 14px}
+</style>
+</head>
+<body>
+<header>
+  <img src="/assets/avatar.png" alt="">
+  <div><h1>GROKKY HQ</h1><div class="sub">1 boss · <span id="cnt">13</span> Grokbots · <span id="mode"></span></div></div>
+  <form class="mission" onsubmit="go(event)">
+    <input id="goal" placeholder="Give the Boss a mission… e.g. Research AI-agent narrative on X and plan a launch for my token" autocomplete="off">
+    <button id="btn">START ▶</button>
+  </form>
+</header>
+<div class="presets" id="presets"></div>
+<main>
+  <section>
+    <div class="boss" id="bossCard"><img src="/assets/avatars/boss.png" alt=""><div><div class="sub mono">THE BOSS · ORCHESTRATOR</div><div class="act" id="bossAct">Waiting for a mission.</div><div class="sub" id="bossSub">Type a goal above. The Boss splits it into tasks, runs the team in parallel, reviews every report and writes your Daily Brief.</div></div></div>
+    <div class="grid" id="grid"></div>
+    <div id="brief"><h3 class="mono" style="margin:0 0 6px;color:#2fe38a">DAILY BRIEF</h3><div class="md" id="briefMd"></div></div>
+  </section>
+  <aside>
+    <div class="panel"><h3>LIVE FEED</h3><div id="feed"></div></div>
+    <div class="panel"><h3>REPORTS</h3><div id="reports"></div></div>
+  </aside>
+</main>
+<dialog id="dlg"><div class="dh"><img id="dImg"><div><div class="sub mono" id="dSub"></div><div style="font:900 22px Inter" id="dName"></div></div><button class="x" onclick="dlg.close()">✕</button></div><div class="db md" id="dBody"></div></dialog>
+<script>
+const $=s=>document.querySelector(s);const R={},OUT={};let ROLES=[];
+const LBL={idle:'IDLE',assigned:'ASSIGNED',working:'WORKING',submitted:'IN REVIEW',revising:'REVISING',approved:'✓ APPROVED'};
+const PRE=['Research what CT says about AI agents today and turn it into 3 viral posts','Plan a 2-week launch for my memecoin $GROKKY (no real trades, paper only)','Full market brief: stocks + crypto + what whales are doing','Grow my X account from 1k to 10k followers in the AI niche','Build a Telegram bot that alerts me when a keyword trends on X'];
+PRE.forEach(p=>{const c=document.createElement('span');c.className='chip';c.textContent=p;c.onclick=()=>{$('#goal').value=p};$('#presets').appendChild(c)});
+function hexA(h,a){return h+Math.round(a*255).toString(16).padStart(2,'0')}
+async function init(){
+  const r=await (await fetch('/api/roles')).json();ROLES=r.roles;
+  $('#mode').innerHTML=r.demo?'<span class="badge" style="color:#ffb020;border-color:#ffb020">DEMO MODE · add XAI_API_KEY</span>':`<span class="badge" style="color:#2fe38a;border-color:#2fe38a">LIVE · ${r.model}</span>`;
+  const g=$('#grid');ROLES.filter(x=>x.id!=='boss').forEach(x=>{R[x.id]=x;
+    const d=document.createElement('div');d.className='room idle';d.id='r-'+x.id;d.style.setProperty('--c',x.color);d.style.setProperty('--c2',hexA(x.color,.14));
+    d.innerHTML=`<span class="st">IDLE</span><img src="${x.avatar}" alt=""><div class="nm" style="color:${x.color}">${x.name}</div><div class="tools">${(x.tools.length?x.tools:['thinking']).join(' · ')}</div><div class="task">${x.job}</div>`;
+    d.onclick=()=>openRole(x.id);g.appendChild(d);});
+  R.boss=ROLES.find(x=>x.id==='boss');$('#cnt').textContent=ROLES.length-1;
+  loadReports();
+  const es=new EventSource('/api/events');es.onmessage=e=>onEv(JSON.parse(e.data));
+}
+function setSt(id,st,task){const d=$('#r-'+id);if(!d)return;d.className='room '+st;d.querySelector('.st').textContent=LBL[st]||st.toUpperCase();if(task)d.querySelector('.task').textContent=task;}
+function onEv(e){
+  const r=R[e.role]||R.boss;
+  if(e.kind==='mission'){Object.keys(R).forEach(k=>k!=='boss'&&setSt(k,'idle'));$('#brief').style.display='none';$('#btn').disabled=true;for(const k in OUT)delete OUT[k];}
+  if(e.role==='boss'){
+    const map={mission:'New mission: '+e.text,planning:'Planning the day…',reviewing:e.text,writing:'Writing the Daily Brief…',done:'Mission complete ✓',error:'Error: '+e.text};
+    if(map[e.kind])$('#bossAct').textContent=map[e.kind];
+    if(e.kind==='reviewing'&&e.target)setSt(e.target,'submitted');
+    if(e.kind==='done'){$('#brief').style.display='block';$('#briefMd').innerHTML=marked.parse(e.text);$('#btn').disabled=false;loadReports();}
+    if(e.kind==='error')$('#btn').disabled=false;
+  }else{
+    if(e.kind==='assigned')setSt(e.role,'assigned',e.text);
+    if(e.kind==='working')setSt(e.role,'working',e.text);
+    if(e.kind==='submitted'){OUT[e.role]=e.text;setSt(e.role,'submitted');}
+    if(e.kind==='revising')setSt(e.role,'revising','Boss: '+e.text);
+    if(e.kind==='approved')setSt(e.role,'approved');
+  }
+  const f=$('#feed'),row=document.createElement('div');row.className='ev';
+  const txt=(e.kind==='submitted'||e.kind==='done')?'report ready — click the room to read':(e.text||'').slice(0,140);
+  row.innerHTML=`<img src="${r.avatar}"><div><b style="color:${r.color}">${r.name}</b> <span class="k">${e.kind.toUpperCase()}</span><div>${txt.replace(/</g,'&lt;')}</div></div>`;
+  f.prepend(row);
+}
+function openRole(id){const r=R[id];$('#dImg').src=r.avatar;$('#dName').textContent=r.name;$('#dName').style.color=r.color;$('#dSub').textContent=r.tools.join(' · ')||'thinking';
+  $('#dBody').innerHTML=OUT[id]?marked.parse(OUT[id]):`<p style="color:#7d8fb0">${r.job}</p><p style="color:#7d8fb0">No report yet. Start a mission.</p>`;dlg.showModal();}
+async function loadReports(){const l=await (await fetch('/api/reports')).json();$('#reports').innerHTML=l.length?'':'<span class="sub">No reports yet.</span>';
+  l.slice(0,12).forEach(n=>{const a=document.createElement('a');a.textContent='📄 '+n;a.onclick=async()=>{const t=await (await fetch('/api/reports/'+n)).text();$('#dImg').src='/assets/avatar.png';$('#dName').textContent=n;$('#dName').style.color='#fff';$('#dSub').textContent='REPORT';$('#dBody').innerHTML=marked.parse(t);dlg.showModal();};$('#reports').appendChild(a);});}
+async function go(ev){ev.preventDefault();const goal=$('#goal').value.trim();if(!goal)return;
+  const r=await fetch('/api/mission',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({goal})});if(!r.ok)alert(await r.text());}
+init();
+</script>
+</body>
+</html>

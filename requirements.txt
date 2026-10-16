@@ -1,0 +1,5 @@
+openai>=1.99
+fastapi>=0.110
+uvicorn>=0.29
+pyyaml>=6.0
+python-dotenv>=1.0
