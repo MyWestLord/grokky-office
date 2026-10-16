@@ -22,8 +22,7 @@ The Boss reviews every report and hands you a <b>Daily Brief</b>.
 <a href="#-how-it-works"><b>How it works</b></a> ·
 <a href="#-the-team"><b>The team</b></a> ·
 <a href="#-squads"><b>Squads</b></a> ·
-<a href="#-roadmap"><b>Roadmap</b></a> ·
-<a href="docs/GUIDE_RU.md"><b>Гайд на русском 🇷🇺</b></a>
+<a href="#-roadmap"><b>Roadmap</b></a>
 </p>
 
 <p align="center"><img src="assets/hq.gif" width="330" alt="GROKKY HQ demo">&nbsp;&nbsp;<img src="assets/avatar.png" width="330" alt="Grokky"></p>
@@ -135,7 +134,7 @@ grokky-office/
 │   └── __main__.py      ← CLI: serve / run / loop / roles
 ├── web/index.html       ← the visual office (single file, no build step)
 ├── assets/              ← avatars, banner, posters, GIF, video, fonts
-└── docs/                ← RU guide, prompts, launch posts
+└── docs/                ← prompts, launch posts
 ```
 </details>
 

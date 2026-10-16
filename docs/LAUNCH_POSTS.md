@@ -20,22 +20,6 @@ Attach `assets/grokky_hq.mp4` (or the GIF) and post. Put the repo link in the **
 
 **First reply:** Here's the full office, free and open source: github.com/MyWestLord/grokky-office. Clone it, add your Grok API key and hire your own team.
 
-## Main post (RU)
-
-> Я дал Гроку тело, назвал его Grokky, и теперь он управляет целым офисом из самого себя. 🫧
->
-> Он нанял 13 Грокботов, каждому дал работу и прикид, а сам каждое утро делает обход и проверяет, кто чем занят:
-> → Детектив читает весь крипто-твиттер и отделяет альфу от FUD.
-> → Разраб пишет код и мёржит PR.
-> → Солдат живёт в окопах мемкоинов.
-> → Костюм следит за акциями, пока рынок спит.
-> → Художник пишет посты, которые ты сейчас читаешь.
-> → Капитан следит за каждым китом в блокчейне.
->
-> Один мозг, четырнадцать тел и ноль зарплат.
->
-> Я выложил весь офис в открытый доступ. Кинь 🫧 в реплай, и я скину репо.
-
 ## Hooks
 
 - I gave Grok a body and he immediately hired 13 more of himself.
