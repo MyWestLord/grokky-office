@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/banner.png" alt="GROKKY HQ" width="100%"></p>
+<p align="center"><img src="assets/hero.gif" alt="GROKKY HQ" width="100%"></p>
 
 <p align="center">
 <img src="https://img.shields.io/badge/powered%20by-Grok%20API-000000?style=for-the-badge&labelColor=0b1120&color=9a5cff" alt="Grok">
@@ -30,8 +30,11 @@ The Boss reviews every report and hands you a <b>Daily Brief</b>.
 
 <p align="center"><img src="assets/readme/features.png" width="100%" alt="features"></p>
 
-<p align="center"><img src="assets/dashboard.png" width="100%" alt="dashboard"></p>
-<p align="center"><sub>The live office: rooms glow while agents work, turn purple in review and green when The Boss approves.</sub></p>
+<h2 align="center">🎬 Watch the office work</h2>
+<p align="center"><img src="assets/dashboard_live.gif" width="100%" alt="live dashboard"></p>
+<p align="center"><sub>Real recording of the dashboard (demo mode, Launch squad). Every agent is animated: it <b>types</b> while working, waits with <b>"..."</b> in review, <b>sweats</b> when sent back for fixes and <b>jumps</b> when approved. The first approved agent gets the <b>👑 MVP</b> crown, and the mission ends with confetti and the Daily Brief.</sub></p>
+
+> **✨ New:** animated agents · 👑 MVP of the mission · live mission stats (time, approvals, fixes) · progress bar · 🔊 sound effects · confetti finale · squads dropdown · Daily Brief to Telegram
 
 ---
 
@@ -233,6 +236,7 @@ Drop an 800×800 `assets/avatars/<id>.png` to give it a face. Ready prompts are 
 - [x] Daily Brief delivered to Telegram
 - [x] 24/7 `loop` mode
 - [x] 14 role avatars + full brand kit
+- [x] Animated agents, 👑 MVP crown, live mission stats, sound FX, confetti finale
 
 **🟡 Phase 2 · OFFICE MEMORY (next)**
 - [ ] Agents read their own past reports before a new task

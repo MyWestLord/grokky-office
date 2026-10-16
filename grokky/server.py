@@ -16,6 +16,7 @@ from .office import ROOT, Office
 app = FastAPI(title="GROKKY HQ")
 office = Office()
 app.mount("/assets", StaticFiles(directory=ROOT / "assets"), name="assets")
+app.mount("/web", StaticFiles(directory=ROOT / "web"), name="web")
 
 
 class Mission(BaseModel):
@@ -35,7 +36,7 @@ def roles():
         "demo": llm.demo_mode(),
         "model": llm.model_name("boss"),
         "squads": office.squads,
-        "roles": [{"id": r.id, "name": r.name, "color": r.color, "tools": r.tools, "avatar": r.avatar,
+        "roles": [{"id": r.id, "name": r.name, "color": r.color, "outfit": r.outfit, "tools": r.tools, "avatar": r.avatar,
                    "job": r.prompt.strip().splitlines()[0]} for r in office.roles.values()],
     }
 
